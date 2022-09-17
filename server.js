@@ -3,9 +3,9 @@ const mongodb = require("mongodb");
 const app = express();
 const donenv = require("dotenv").config();
 const MongoClient = mongodb.MongoClient;
-const URL = process.env.MONGODB_URI;
+// const URL = process.env.MONGODB_URI;
 
-// const URL = 'mongodb://localhost:27017';
+const URL = 'mongodb+srv://admin8220:japan8220@cluster0.v2n1svi.mongodb.net/?retryWrites=true&w=majority';
 const DB = "assign_mentor";
 //Midleware
 app.use(express.json());
