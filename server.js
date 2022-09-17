@@ -12,6 +12,10 @@ app.use(express.json());
 
 //<---------------------------------------------------- Students --------------------------------------------------->
 
+
+app.get("/",function(req,res){
+    res.json("HI THERE")
+})
 app.post("/students", async function (req, res) {
   try {
     // Create a Conection Between Node and MongoDb
@@ -284,4 +288,4 @@ app.delete("/assignmentor/:id", async function (req, res) {
   }
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3006);
