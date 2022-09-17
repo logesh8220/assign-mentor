@@ -286,4 +286,4 @@ app.delete("/assignmentor/:id", async function (req, res) {
   }
 });
 
-app.listen(process.env.PORT || 3006);
+app.listen(process.env.PORT || 3000);
