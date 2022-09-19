@@ -1,12 +1,16 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const app = express();
+const cors = require("cors")
 const donenv = require("dotenv").config();
 const MongoClient = mongodb.MongoClient;
 const URL = 'mongodb+srv://admin8220:japan8220@cluster0.v2n1svi.mongodb.net/?retryWrites=true&w=majority'
 const DB = "assign_mentor";
 //Midleware
 app.use(express.json());
+app.use(cors({
+  origin:"http://localhost:3000"
+}))
 
 //<---------------------------------------------------- Students --------------------------------------------------->
 
@@ -229,6 +233,25 @@ app.get("/assignmentor", async function (req, res) {
     res.status(500).json({ message: "somthing went wrong" });
   }
 });
+
+//<------------------------------query-------------------------------->
+
+// app.get("/assignmentor", async function (req, res) {
+//     try {
+//       // Create a Conection Between Node and MongoDb
+//       const connection = await MongoClient.connect(URL);
+//       //select the DB
+//       const db = connection.db(DB);
+//       //Select Collection and Do the opprations
+//       const studetnsdata = await db.collection("assignmentor").find().toArray();
+//       //close coolection
+//       await connection.close();
+//       let string = req.query
+//       res.json(string);
+//     } catch (error) {
+//       res.status(500).json({ message: "somthing went wrong" });
+//     }
+//   });
 app.get("/assignmentor/:id", async function (req, res) {
   try {
     // Create a Conection Between Node and MongoDb
