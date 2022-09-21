@@ -236,22 +236,28 @@ app.get("/assignmentor", async function (req, res) {
 
 //<------------------------------query-------------------------------->
 
-// app.get("/assignmentor", async function (req, res) {
-//     try {
-//       // Create a Conection Between Node and MongoDb
-//       const connection = await MongoClient.connect(URL);
-//       //select the DB
-//       const db = connection.db(DB);
-//       //Select Collection and Do the opprations
-//       const studetnsdata = await db.collection("assignmentor").find().toArray();
-//       //close coolection
-//       await connection.close();
-//       let string = req.query
-//       res.json(string);
-//     } catch (error) {
-//       res.status(500).json({ message: "somthing went wrong" });
-//     }
-//   });
+app.get("/assignmentor/:name", async function (req, res) {
+    try {
+      // Create a Conection Between Node and MongoDb
+      const connection = await MongoClient.connect(URL);
+      //select the DB
+      const db = connection.db(DB);
+      //Select Collection and Do the opprations
+      const studetnsdata = await db.collection("assignmentor").find(
+        {
+          "$or":[
+            {mentor_name:{$regex:req.params.name}}
+          ]
+        }
+      ).toArray();
+      //close coolection
+      
+      await connection.close();
+      res.json(studetnsdata);
+    } catch (error) {
+      res.status(500).json({ message: "somthing went wrong" });
+    }
+  });
 app.get("/assignmentor/:id", async function (req, res) {
   try {
     // Create a Conection Between Node and MongoDb
