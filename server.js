@@ -9,7 +9,7 @@ const DB = "assign_mentor";
 //Midleware
 app.use(express.json());
 app.use(cors({
-  origin: "https://gleeful-longma-910014.netlify.app/"
+  origin: "https://gleeful-longma-910014.netlify.app"
 }))
 
 //<---------------------------------------------------- Students --------------------------------------------------->
