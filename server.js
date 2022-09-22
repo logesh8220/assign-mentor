@@ -9,14 +9,14 @@ const DB = "assign_mentor";
 //Midleware
 app.use(express.json());
 app.use(cors({
-  origin:"http://localhost:3000"
+  origin: "http://localhost:3000"
 }))
 
 //<---------------------------------------------------- Students --------------------------------------------------->
 
 
-app.get("/",function(req,res){
-    res.json("HI THERE")
+app.get("/", function (req, res) {
+  res.json("HI THERE")
 })
 app.post("/students", async function (req, res) {
   try {
@@ -107,6 +107,7 @@ app.delete("/students/:id", async function (req, res) {
     res.status(500).json({ message: "somthing went wrong" });
   }
 });
+
 
 //<---------------------------------------------------- mentors--------------------------------------------------->
 
@@ -199,120 +200,30 @@ app.delete("/mentors/:id", async function (req, res) {
     res.status(500).json({ message: "somthing went wrong" });
   }
 });
+// -----------------------------------------------------querys-----------------------------------------------------
 
-//<---------------------------------------------------- Assignmentor--------------------------------------------------->
 
-app.post("/assignmentor", async function (req, res) {
+app.get("/students/search/:Key", async function (req, res) {
   try {
     // Create a Conection Between Node and MongoDb
     const connection = await MongoClient.connect(URL);
     //select the DB
     const db = connection.db(DB);
     //Select Collection and Do the opprations
-    await db.collection("assignmentor").insertOne(req.body);
-    //close coolection
+    const studentsdata = await db.collection("students").find(
+      {
+        "$or": [
+          { mentor_name: { $regex: req.params.Key } },
+          { status: { $regex: req.params.Key } }
+        ]
+      }
+    ).toArray();
+    //close collection
     await connection.close();
-    res.status(200).json({ message: "data inserted" });
+    res.json(studentsdata);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "somthing went wrong" });
   }
 });
-
-app.get("/assignmentor", async function (req, res) {
-  try {
-    // Create a Conection Between Node and MongoDb
-    const connection = await MongoClient.connect(URL);
-    //select the DB
-    const db = connection.db(DB);
-    //Select Collection and Do the opprations
-    const studetnsdata = await db.collection("assignmentor").find().toArray();
-    //close coolection
-    await connection.close();
-    res.json(studetnsdata);
-  } catch (error) {
-    res.status(500).json({ message: "somthing went wrong" });
-  }
-});
-
-//<------------------------------query-------------------------------->
-
-app.get("/assignmentor/:name", async function (req, res) {
-    try {
-      // Create a Conection Between Node and MongoDb
-      const connection = await MongoClient.connect(URL);
-      //select the DB
-      const db = connection.db(DB);
-      //Select Collection and Do the opprations
-      const studetnsdata = await db.collection("assignmentor").find(
-        {
-          "$or":[
-            {mentor_name:{$regex:req.params.name}}
-          ]
-        }
-      ).toArray();
-      //close coolection
-      
-      await connection.close();
-      res.json(studetnsdata);
-    } catch (error) {
-      res.status(500).json({ message: "somthing went wrong" });
-    }
-  });
-app.get("/assignmentor/:id", async function (req, res) {
-  try {
-    // Create a Conection Between Node and MongoDb
-    const connection = await MongoClient.connect(URL);
-    //select the DB
-    const db = connection.db(DB);
-    //Select Collection and Do the opprations
-    let studetnsdata = await db
-      .collection("mentors")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
-    //close coolection
-    await connection.close();
-    res.json(studetnsdata);
-  } catch (error) {
-    res.status(500).json({ message: "somthing went wrong" });
-  }
-});
-
-app.put("/assignmentor/:id", async function (req, res) {
-  try {
-    // Create a Conection Between Node and MongoDb
-    const connection = await MongoClient.connect(URL);
-    //select the DB
-    const db = connection.db(DB);
-    //Select Collection and Do the opprations
-    let studetnsdata = await db
-      .collection("assignmentor")
-      .findOneAndUpdate(
-        { _id: mongodb.ObjectId(req.params.id) },
-        { $set: req.body }
-      );
-    //close coolection
-    await connection.close();
-    res.json(studetnsdata);
-  } catch (error) {
-    res.status(500).json({ message: "somthing went wrong" });
-  }
-});
-
-app.delete("/assignmentor/:id", async function (req, res) {
-  try {
-    // Create a Conection Between Node and MongoDb
-    const connection = await MongoClient.connect(URL);
-    //select the DB
-    const db = connection.db(DB);
-    //Select Collection and Do the opprations
-    let studetnsdata = await db
-      .collection("assignmentor")
-      .findOneAndDelete({ _id: mongodb.ObjectId(req.params.id) });
-    //close coolection
-    await connection.close();
-    res.json(studetnsdata);
-  } catch (error) {
-    res.status(500).json({ message: "somthing went wrong" });
-  }
-});
-
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3007);
